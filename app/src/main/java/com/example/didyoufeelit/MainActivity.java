@@ -38,9 +38,14 @@ public class MainActivity extends AppCompatActivity {
     private class EarthQuakeAsync extends AsyncTask<String,Void,Event>{
 
         @Override
-        protected Event doInBackground(String... strings) {
+        protected Event doInBackground(String... urls) {
+            // Don't perform the request if there are no URLs, or the first URL is null.
+            if (urls.length < 1 || urls[0] == null) {
+                return null;
+            }
+
             // Perform the HTTP request for earthquake data and process the response.
-            Event earthquake = Utils.fetchEarthquakeData(strings[0]);
+            Event earthquake = Utils.fetchEarthquakeData(urls[0]);
 
 
             return earthquake;
@@ -48,6 +53,12 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Event earthquake) {
+
+            // If there is no result, do nothing.
+            if (earthquake == null) {
+                return;
+            }
+
              updateUi(earthquake);
         }
     }
